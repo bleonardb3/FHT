@@ -23,10 +23,9 @@ app.config['SECRET_KEY'] = 'secretpassw0rd'
 bootstrap = Bootstrap(app)
 
 class FHTForm(FlaskForm):
-  categories = RadioField('Categories', coerce=int, choices=[('1','Sports/Travel'),('2','Engineering'),('3','Information Technology'),('4','Journalism'),('5','Government'),('6','Medical'), /
-  ('7','Science'),('8','Arts'),('9','Advertising'),('10','Legal'),('11','Construction'),('12','Retail'),('13','Education'),('14','Finance'),('15','Other')]
+  categories = RadioField('Categories', coerce=int, choices=[('1','Sports/Travel'),('2','Engineering'),('3','Information Technology'),('4','Journalism'),('5','Government'),('6','Medical'), ('7','Science'),('8','Arts'),('9','Advertising'),('10','Legal'),('11','Construction'),('12','Retail'),('13','Education'),('14','Finance'),('15','Other')]
   age = IntegerField('Age:')
-  countries_visited_number = IntegerField('Number of countries visited:')
+  countries_visited_count = IntegerField('Number of countries visited:')
   submit = SubmitField('Submit')
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -38,15 +37,15 @@ def index():
     age = form.age.data
     print (age)
     form.age.data = ''
-    countries_visisted_number = form.countries_visited_number.data
-    form.country_visited_number.data = ''
+    countries_visited_count = form.countries_count.data
+    form.countries_visited_count.data = ''
         
     headers = urllib3.util.make_headers(basic_auth='{}:{}'.format(username, password))
     path = '{}/v3/identity/token'.format(url)
     response = requests.get(path, headers=headers)
     mltoken = json.loads(response.text).get('token')
     scoring_header = {'Content-Type': 'application/json', 'Authorization': 'Bearer' + mltoken}
-    payload = {"fields": ["Code","Age","Countries_Visited_Number"], "values": [[category,age,countries_visisted_count]]}
+    payload = {"fields": ["Code","Age","Countries_Visited_Count"], "values": [[category,age,countries_visited_count]]}
     scoring = requests.post(scoring_endpoint, json=payload, headers=scoring_header)
 
     scoringDICT = json.loads(scoring.text) 
