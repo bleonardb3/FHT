@@ -1,0 +1,30 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}FHT Prediction{% endblock %}
+{% block navbar %}
+    <nav class="navbar navbar-inverse" role="navigation">
+        <div class="container">
+        <a class="navbar-brand" href="#">FHT Prediction</a>
+        </div>
+    </nav>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <form method="POST" action="">
+            <div class="row">
+                <div class="col-md-12">
+                <h3>To determine the trafficking risk prediction,please enter the following:</h3>
+            </div>
+        </div>
+    <div class="row">
+        <div class="col-md-8">
+            <p>{{ form.categories.label }} {{ wtf.form_field(form.categories) }}</p>
+            <p>{{ form.age.label }} {{ form.age }}</p>
+            <p>{{ form.countries_visited_count.label }} {{ wtf.form_field(form.countries_visited_count) }}</p>
+	        <br>
+            {{ form.submit() }}
+            {{ form.hidden_tag() }}
+        </div>
+    </div>
+</div>
+{% endblock %}
