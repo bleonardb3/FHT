@@ -37,7 +37,7 @@ def index():
     age = form.age.data
     print (age)
     form.age.data = ''
-    countries_visited_count = form.countries_count.data
+    countries_visited_count = form.countries_visited_count.data
     form.countries_visited_count.data = ''
         
     headers = urllib3.util.make_headers(basic_auth='{}:{}'.format(username, password))
