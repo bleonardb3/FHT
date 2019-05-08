@@ -62,7 +62,7 @@ def index():
    # else :
    #   score_str = "not a high risk"
    #   probability = probability_not_high_risk
-    scoring_str = "test"
+    score_str = "test"
     probability = 1
 
     return render_template('score.html', form=form, scoring=score_str,probability=probability)
