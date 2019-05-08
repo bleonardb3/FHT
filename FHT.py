@@ -23,7 +23,7 @@ app.config['SECRET_KEY'] = 'secretpassw0rd'
 bootstrap = Bootstrap(app)
 
 class FHTForm(FlaskForm):
-  categories = RadioField('Categories', coerce=int, choices=[('1','Sports/Travel'),('2','Engineering'),('3','Information Technology'),('4','Journalism'),('5','Government'),('6','Medical'), ('7','Science'),('8','Arts'),('9','Advertising'),('10','Legal'),('11','Construction'),('12','Retail'),('13','Education'),('14','Finance'),('15','Other')]
+  categories = RadioField('Categories', coerce=int, choices=[('1','Sports/Travel'),('2','Engineering'),('3','Information Technology'),('4','Journalism'),('5','Government'),('6','Medical'), ('7','Science'),('8','Arts'),('9','Advertising'),('10','Legal'),('11','Construction'),('12','Retail'),('13','Education'),('14','Finance'),('15','Other')])
   age = IntegerField('Age:')
   countries_visited_count = IntegerField('Number of countries visited:')
   submit = SubmitField('Submit')
@@ -49,7 +49,7 @@ def index():
     scoring = requests.post(scoring_endpoint, json=payload, headers=scoring_header)
 
     scoringDICT = json.loads(scoring.text) 
-	print ("scoringDICT: ",scoringDICT)
+    print ("scoringDICT: ",scoringDICT)
    # scoringList = scoringDICT['values'].pop()[11:13]
    # print (scoringList)
    # score = scoringList[1:].pop()
@@ -63,9 +63,7 @@ def index():
    #   score_str = "not a high risk"
    #   probability = probability_not_high_risk
     scoring_str = "test"
-	probability = 1 
-      
-    
+    probability = 1
 
     return render_template('score.html', form=form, scoring=score_str,probability=probability)
   return render_template('index.html', form=form)
