@@ -17,7 +17,7 @@ if 'VCAP_SERVICES' in os.environ:
         username = creds['username']
         password = creds['password']
         url = creds['url']
-scoring_endpoint = 'https://ibm-watson-ml.mybluemix.net/v3/wml_instances/374817e5-8365-42da-a434-cb20e3d1fba4/published_models/9b867182-4926-4144-812b-cc8cf6ea33bf/deployments/c45a87fb-50d1-4b17-ad04-703f551aa99d/online'
+scoring_endpoint = 'https://us-south.ml.cloud.ibm.com/v3/wml_instances/02eafab5-7bd2-4ac4-abb1-334f0cc6232c/deployments/7536dc0f-1c2a-495c-9cb2-9ec299c24b0e/online'
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secretpassw0rd'
 bootstrap = Bootstrap(app)
