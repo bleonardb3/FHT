@@ -45,7 +45,7 @@ def index():
     response = requests.get(path, headers=headers)
     mltoken = json.loads(response.text).get('token')
     scoring_header = {'Content-Type': 'application/json', 'Authorization': 'Bearer' + mltoken}
-    payload = {"fields": ["Code","Age","Countries_Visited_Count"], "values": [[category,age,countries_visited_count]]}
+    payload_scoring = {"fields": ["COUNTRIES_VISITED_COUNT", "AGE", "Code"], "values": [[countries_visited_count,age,category]]}
     scoring = requests.post(scoring_endpoint, json=payload, headers=scoring_header)
 
     scoringDICT = json.loads(scoring.text) 
