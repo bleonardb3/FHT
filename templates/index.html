@@ -13,14 +13,15 @@
         <form method="POST" action="">
             <div class="row">
                 <div class="col-md-12">
-                <h3>To determine the trafficking risk prediction,please enter the following:</h3>
+                <h3>To determine the trafficking risk prediction, please enter the following:</h3>
             </div>
         </div>
     <div class="row">
         <div class="col-md-8">
-            <p>{{ form.categories.label }} {{ wtf.form_field(form.categories) }}</p>
+            <p>{{ wtf.form_field(form.categories) }}</p>
             <p>{{ form.age.label }} {{ form.age }}</p>
             <p>{{ form.countries_visited_count.label }} {{ form.countries_visited_count }}</p>
+			<p>{{ form.passport_country.label }} {{ wtf.form_field(form.passport_country) }} <p>
 	        <br>
             {{ form.submit() }}
             {{ form.hidden_tag() }}
