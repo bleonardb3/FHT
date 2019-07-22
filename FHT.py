@@ -5,18 +5,18 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, RadioField, FloatField, IntegerField,SelectField,TextField
 from wtforms.validators import Required, Length, NumberRange
 
-url = 'https://us-south.ml.cloud.ibm.com'
-username = '261cda05-8b26-4bec-ad4f-d4bb811c8dad'
-password = '00f7cbc9-08ea-4fa6-bcbb-b7762daa7785'
+#url = 'https://us-south.ml.cloud.ibm.com'
+#username = '261cda05-8b26-4bec-ad4f-d4bb811c8dad'
+#password = '00f7cbc9-08ea-4fa6-bcbb-b7762daa7785'
 
-#if 'VCAP_SERVICES' in os.environ:
-#    vcap = json.loads(os.getenv('VCAP_SERVICES'))
-#    print('Found VCAP_SERVICES')
-#    if 'pm-20' in vcap:
-#        creds = vcap['pm-20'][0]['credentials']
-#        username = creds['username']
-#        password = creds['password']
-#        url = creds['url']
+if 'VCAP_SERVICES' in os.environ:
+    vcap = json.loads(os.getenv('VCAP_SERVICES'))
+    print('Found VCAP_SERVICES')
+    if 'pm-20' in vcap:
+        creds = vcap['pm-20'][0]['credentials']
+        username = creds['username']
+        password = creds['password']
+        url = creds['url']
 scoring_endpoint = 'https://us-south.ml.cloud.ibm.com/v4/deployments/48ea36dd-0780-49c1-a0c8-f73f20546784/predictions'
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secretpassw0rd'
