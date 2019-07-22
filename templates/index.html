@@ -21,8 +21,10 @@
             <p>{{ wtf.form_field(form.categories) }}</p>
             <p>{{ form.age.label }} {{ form.age }}</p>
             <p>{{ form.countries_visited_count.label }} {{ form.countries_visited_count }}</p>
-			<p>{{ form.passport_country.label }} {{ wtf.form_field(form.passport_country) }} <p>
-	        <br>
+            <p>{{ form.passport_country.label }} {{ wtf.form_field(form.passport_country) }} </p>
+            <p>{{ form.arrival_state.label }} {{ form.arrival_state }}</p>
+            <p>{{ form.departure_country.label }} {{ form.departure_country }}</p>
+            <br>
             {{ form.submit() }}
             {{ form.hidden_tag() }}
         </div>
