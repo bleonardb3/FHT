@@ -2,22 +2,22 @@ import urllib3, requests, json, os
 from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, RadioField, FloatField, IntegerField,SelectField
+from wtforms import StringField, SubmitField, RadioField, FloatField, IntegerField,SelectField,TextField
 from wtforms.validators import Required, Length, NumberRange
 
-#url = 'https://us-south.ml.cloud.ibm.com'
-#username = 'c49a6e9c-185e-446f-98df-9c4f9fb9aebd'
-#password = '766378de-306e-48eb-a191-d88b7115116a'
+url = 'https://us-south.ml.cloud.ibm.com'
+username = '261cda05-8b26-4bec-ad4f-d4bb811c8dad'
+password = '00f7cbc9-08ea-4fa6-bcbb-b7762daa7785'
 
-if 'VCAP_SERVICES' in os.environ:
-    vcap = json.loads(os.getenv('VCAP_SERVICES'))
-    print('Found VCAP_SERVICES')
-    if 'pm-20' in vcap:
-        creds = vcap['pm-20'][0]['credentials']
-        username = creds['username']
-        password = creds['password']
-        url = creds['url']
-scoring_endpoint = 'https://us-south.ml.cloud.ibm.com/v3/wml_instances/02eafab5-7bd2-4ac4-abb1-334f0cc6232c/deployments/cbea645b-68ed-435b-b0e3-dc2f87df4eaf/online'
+#if 'VCAP_SERVICES' in os.environ:
+#    vcap = json.loads(os.getenv('VCAP_SERVICES'))
+#    print('Found VCAP_SERVICES')
+#    if 'pm-20' in vcap:
+#        creds = vcap['pm-20'][0]['credentials']
+#        username = creds['username']
+#        password = creds['password']
+#        url = creds['url']
+scoring_endpoint = 'https://us-south.ml.cloud.ibm.com/v4/deployments/48ea36dd-0780-49c1-a0c8-f73f20546784/predictions'
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secretpassw0rd'
 bootstrap = Bootstrap(app)
@@ -29,11 +29,17 @@ class FHTForm(FlaskForm):
   age = IntegerField('Age:')
   countries_visited_count = IntegerField('Number of countries visited:')
   passport_country = RadioField('Passport Country', choices=[('Ghana', 'Ghana'), ('Brazil', 'Brazil'), ('Pakistan', 'Pakistan'),('Bangladesh','Bangladesh'),('Haiti','Haiti'),('India','India')])
+  arrival_state = StringField('Arrival State:')
+  departure_country = StringField('Departure Country:')  
   submit = SubmitField('Submit')
 @app.route('/', methods=['GET', 'POST'])
 def index():
   form = FHTForm()
   if form.is_submitted(): 
+    arrival_state = form.arrival_state.data
+    form.arrival_state.data=''
+    departure_country = form.departure_country.data
+    form.departure_country.data =''
     category = form.categories.data
     print (category)
     form.categories.data = ''
@@ -44,21 +50,23 @@ def index():
     form.countries_visited_count.data = ''
     passport_country = form.passport_country.data
     form.passport_country.data=''
-        
+    
+    
     headers = urllib3.util.make_headers(basic_auth='{}:{}'.format(username, password))
     path = '{}/v3/identity/token'.format(url)
     response = requests.get(path, headers=headers)
     mltoken = json.loads(response.text).get('token')
     scoring_header = {'Content-Type': 'application/json', 'Authorization': 'Bearer' + mltoken}
-    payload = {"fields": ["COUNTRIES_VISITED_COUNT", "AGE","PASSPORT_COUNTRY", "Category"], "values": [[countries_visited_count,age,passport_country,category]]}
+    payload = {"input_data": [{"fields": ["PASSPORT_COUNTRY","COUNTRIES_VISITED_COUNT","ARRIVAL_STATE","DEPARTURE_AIRPORT_COUNTRY_CODE","AGE","Category",], "values": [[passport_country,countries_visited_count,arrival_state,departure_country,age,category]]}]}
+    print("payload:",payload)
     scoring = requests.post(scoring_endpoint, json=payload, headers=scoring_header)
 
     scoringDICT = json.loads(scoring.text) 
     print ("scoringDICT: ",scoringDICT)
-    scoringList = scoringDICT['values'].pop()[6:9]
-    print (scoringList)
-    score  = int(scoringList[2])
-    probability = scoringList[0][int(scoringList[1])]
+    scoringList = scoringDICT['predictions'][0]['values']
+    print ("scoringList: ",scoringList)
+    score  =  int(scoringList[0][0])
+    probability = max(scoringList[0][1])
    # score = scoringList[1:].pop()
    # probability_died = scoringList[0:1].pop()[0:1].pop()
    # print (probability_died)
