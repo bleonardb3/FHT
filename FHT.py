@@ -14,8 +14,8 @@ if 'VCAP_SERVICES' in os.environ:
     print('Found VCAP_SERVICES')
     if 'pm-20' in vcap:
         creds = vcap['pm-20'][0]['credentials']
-        username = creds['username']
-        password = creds['password']
+        wml_apikey = creds['apikey']
+        ml_instance_id = creds['instance_id']
         url = creds['url']
 scoring_endpoint = 'https://us-south.ml.cloud.ibm.com/v4/deployments/48ea36dd-0780-49c1-a0c8-f73f20546784/predictions'
 app = Flask(__name__)
@@ -50,13 +50,17 @@ def index():
     form.countries_visited_count.data = ''
     passport_country = form.passport_country.data
     form.passport_country.data=''
+    # get iam_token
+    iam_url = "https://iam.bluemix.net/oidc/token"
+    headers = { "Content-Type" : "application/x-www-form-urlencoded" }
+    data    = "apikey=" + wml_apikey + "&grant_type=urn:ibm:params:oauth:grant-type:apikey"
+    IBM_cloud_IAM_uid = "bx"
+    IBM_cloud_IAM_pwd = "bx"
+    response  = requests.post( iam_url, headers=headers, data=data, auth=( IBM_cloud_IAM_uid, IBM_cloud_IAM_pwd ) )
+    iam_token = response.json()["access_token"]
     
-    
-    headers = urllib3.util.make_headers(basic_auth='{}:{}'.format(username, password))
-    path = '{}/v3/identity/token'.format(url)
-    response = requests.get(path, headers=headers)
-    mltoken = json.loads(response.text).get('token')
-    scoring_header = {'Content-Type': 'application/json', 'Authorization': 'Bearer' + mltoken}
+    auth = 'Bearer ' + iam_token
+    scoring_header = {'Content-Type': 'application/json', 'Authorization': auth, 'ML-Instance-ID': ml_instance_id}
     payload = {"input_data": [{"fields": ["PASSPORT_COUNTRY","COUNTRIES_VISITED_COUNT","ARRIVAL_STATE","DEPARTURE_AIRPORT_COUNTRY_CODE","AGE","Category",], "values": [[passport_country,countries_visited_count,arrival_state,departure_country,age,category]]}]}
     print("payload:",payload)
     scoring = requests.post(scoring_endpoint, json=payload, headers=scoring_header)
