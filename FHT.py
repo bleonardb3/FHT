@@ -6,8 +6,8 @@ from wtforms import StringField, SubmitField, RadioField, FloatField, IntegerFie
 from wtforms.validators import Required, Length, NumberRange
 
 #url = 'https://us-south.ml.cloud.ibm.com'
-#username = '261cda05-8b26-4bec-ad4f-d4bb811c8dad'
-#password = '00f7cbc9-08ea-4fa6-bcbb-b7762daa7785'
+#wml_apikey = 'r5XhQCe1iuBXrSzGKy5zTm7M0dMEp8ZISL1NvJHdM2oY'
+#ml_instance_id = '083ff2e8-0201-41c7-8796-e3c6bdd77010'
 
 if 'VCAP_SERVICES' in os.environ:
     vcap = json.loads(os.getenv('VCAP_SERVICES'))
@@ -17,7 +17,7 @@ if 'VCAP_SERVICES' in os.environ:
         wml_apikey = creds['apikey']
         ml_instance_id = creds['instance_id']
         url = creds['url']
-scoring_endpoint = 'https://us-south.ml.cloud.ibm.com/v4/deployments/48ea36dd-0780-49c1-a0c8-f73f20546784/predictions'
+scoring_endpoint = 'https://us-south.ml.cloud.ibm.com/v4/deployments/4cbc62f6-b882-4d29-87a0-ee1291c9f89e/predictions'
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secretpassw0rd'
 bootstrap = Bootstrap(app)
