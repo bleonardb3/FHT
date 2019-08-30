@@ -13,8 +13,11 @@ if 'VCAP_SERVICES' in os.environ:
     vcap = json.loads(os.getenv('VCAP_SERVICES'))
     print('Found VCAP_SERVICES')
     if 'pm-20' in vcap:
+        print('Found pm-20')
         creds = vcap['pm-20'][0]['credentials']
         wml_apikey = creds['apikey']
+        print('wml_apikey')
+        print(wml_apikey)
         ml_instance_id = creds['instance_id']
         url = creds['url']
 scoring_endpoint = 'https://us-south.ml.cloud.ibm.com/v4/deployments/4cbc62f6-b882-4d29-87a0-ee1291c9f89e/predictions'
@@ -56,13 +59,16 @@ def index():
     data    = "apikey=" + wml_apikey + "&grant_type=urn:ibm:params:oauth:grant-type:apikey"
     IBM_cloud_IAM_uid = "bx"
     IBM_cloud_IAM_pwd = "bx"
+    print('submitting token request')
     response  = requests.post( iam_url, headers=headers, data=data, auth=( IBM_cloud_IAM_uid, IBM_cloud_IAM_pwd ) )
     iam_token = response.json()["access_token"]
+    print(iam_token)
     
     auth = 'Bearer ' + iam_token
     scoring_header = {'Content-Type': 'application/json', 'Authorization': auth, 'ML-Instance-ID': ml_instance_id}
     payload = {"input_data": [{"fields": ["PASSPORT_COUNTRY","COUNTRIES_VISITED_COUNT","ARRIVAL_STATE","DEPARTURE_AIRPORT_COUNTRY_CODE","AGE","Category",], "values": [[passport_country,countries_visited_count,arrival_state,departure_country,age,category]]}]}
-    print("payload:",payload)
+    print(payload)
+    print('submitting scoring request')
     scoring = requests.post(scoring_endpoint, json=payload, headers=scoring_header)
 
     scoringDICT = json.loads(scoring.text) 
